@@ -1,893 +1,1642 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Miguel A. Porras — Unity Game Developer</title>
-<meta name="description" content="Portafolio de Miguel A. Porras, desarrollador Unity y programador C# especializado en mecánicas de juego e integración de hardware.">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Miguel Porras — Game Developer & STEAM Systems Designer. Medellín, Colombia. Diseño sistemas donde Unity, Arduino y el aprendizaje son un solo objeto." />
+  <title>Miguel Porras · Game Developer & STEAM Systems Designer</title>
 
-<!-- Google Fonts: Space Grotesk (display), Inter (cuerpo), JetBrains Mono (etiquetas / código) -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
-<style>
-  /* =============================================
-     1. VARIABLES GLOBALES (TOKENS DE DISEÑO)
-     ============================================= */
-  :root{
-    --bg:            #0a0d12;
-    --bg-alt:        #0d1119;
-    --surface:       #12161f;
-    --surface-2:     #171d29;
-    --border:        rgba(255,255,255,0.09);
-    --border-strong: rgba(255,255,255,0.16);
-
-    --text:          #e8eaf0;
-    --text-dim:      #8891a3;
-    --text-faint:    #5a6274;
-
-    --accent:        #ffb454;   /* ámbar "soldadura" */
-    --accent-dim:    #8a6a3a;
-    --accent-2:      #5eead4;   /* cian "traza de circuito" */
-    --accent-2-dim:  #3a7a70;
-
-    --danger:        #ff6b6b;
-
-    --font-display:  'Space Grotesk', sans-serif;
-    --font-body:     'Inter', sans-serif;
-    --font-mono:     'JetBrains Mono', monospace;
-
-    --radius:        6px;
-    --max-width:     1180px;
-
-    --transition:     0.25s ease;
-  }
-
-  /* =============================================
-     2. RESET Y BASE
-     ============================================= */
-  *, *::before, *::after{ box-sizing: border-box; }
-
-  html{
-    scroll-behavior: smooth;
-  }
-
-  body{
-    margin: 0;
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 16px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
-
-  img, video{ max-width: 100%; display: block; }
-
-  a{ color: inherit; text-decoration: none; }
-
-  ul{ list-style: none; margin: 0; padding: 0; }
-
-  h1, h2, h3{
-    font-family: var(--font-display);
-    line-height: 1.15;
-    margin: 0;
-  }
-
-  /* Foco visible para navegación por teclado (accesibilidad) */
-  a:focus-visible,
-  button:focus-visible,
-  input:focus-visible,
-  textarea:focus-visible{
-    outline: 2px solid var(--accent-2);
-    outline-offset: 3px;
-  }
-
-  .container{
-    width: 100%;
-    max-width: var(--max-width);
-    margin: 0 auto;
-    padding: 0 24px;
-  }
-
-  section{
-    padding: 120px 0;
-    position: relative;
-  }
-
-  /* Etiqueta "eyebrow" estilo comentario de código: refuerza identidad de programador */
-  .eyebrow{
-    font-family: var(--font-mono);
-    font-size: 0.85rem;
-    color: var(--accent-2);
-    letter-spacing: 0.02em;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .eyebrow::before{
-    content: "//";
-    color: var(--text-faint);
-  }
-
-  .section-title{
-    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
-    font-weight: 700;
-    margin-bottom: 48px;
-    color: var(--text);
-  }
-  .section-title span{ color: var(--accent); }
-
-  /* Reduce el movimiento si el usuario lo prefiere */
-  @media (prefers-reduced-motion: reduce){
-    html{ scroll-behavior: auto; }
-    *{ animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; }
-  }
-
-  /* =============================================
-     3. MARCO DE ESQUINAS (elemento de firma visual)
-     Evoca los "corner brackets" de un HUD de videojuego
-     ============================================= */
-  .bracket-frame{
-    position: relative;
-  }
-  .bracket-frame::before,
-  .bracket-frame::after,
-  .bracket-frame .corner-tl,
-  .bracket-frame .corner-br{
-    content: "";
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    border-color: var(--accent);
-    border-style: solid;
-    border-width: 0;
-    opacity: 0.7;
-    transition: opacity var(--transition), border-color var(--transition);
-    pointer-events: none;
-  }
-  .bracket-frame::before{ /* esquina superior-izquierda */
-    top: -1px; left: -1px;
-    border-top-width: 2px;
-    border-left-width: 2px;
-  }
-  .bracket-frame::after{ /* esquina inferior-derecha */
-    bottom: -1px; right: -1px;
-    border-bottom-width: 2px;
-    border-right-width: 2px;
-  }
-  .bracket-frame:hover::before,
-  .bracket-frame:hover::after{
-    opacity: 1;
-    border-color: var(--accent-2);
-  }
-
-  /* =============================================
-     4. NAVEGACIÓN
-     ============================================= */
-  .navbar{
-    position: fixed;
-    top: 0; left: 0; right: 0;
-    z-index: 100;
-    background: rgba(10, 13, 18, 0.85);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-inner{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 68px;
-  }
-  .logo{
-    font-family: var(--font-mono);
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-  }
-  .logo .cursor{
-    display: inline-block;
-    width: 8px;
-    height: 1.1em;
-    background: var(--accent);
-    margin-left: 4px;
-    animation: blink 1.1s steps(1) infinite;
-  }
-  @keyframes blink{ 50%{ opacity: 0; } }
-
-  .nav-links{
-    display: flex;
-    gap: 36px;
-    font-size: 0.95rem;
-  }
-  .nav-links a{
-    color: var(--text-dim);
-    font-weight: 500;
-    transition: color var(--transition);
-    position: relative;
-  }
-  .nav-links a:hover{ color: var(--accent-2); }
-
-  .nav-toggle{
-    display: none;
-    background: none;
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    color: var(--text);
-    width: 42px;
-    height: 42px;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-
-  /* =============================================
-     5. HERO
-     ============================================= */
-  .hero{
-    padding-top: 160px;
-    padding-bottom: 100px;
-    min-height: 92vh;
-    display: flex;
-    align-items: center;
-    background:
-      radial-gradient(ellipse 60% 50% at 15% 20%, rgba(94,234,212,0.07), transparent),
-      radial-gradient(ellipse 50% 40% at 90% 10%, rgba(255,180,84,0.06), transparent);
-    overflow: hidden;
-  }
-
-  /* Patrón sutil de "traza de circuito" de fondo — muy tenue, solo textura */
-  .hero::before{
-    content: "";
-    position: absolute;
-    inset: 0;
-    opacity: 0.35;
-    pointer-events: none;
-    background-image:
-      linear-gradient(var(--border) 1px, transparent 1px),
-      linear-gradient(90deg, var(--border) 1px, transparent 1px);
-    background-size: 42px 42px;
-    -webkit-mask-image: linear-gradient(to bottom, black, transparent 75%);
-            mask-image: linear-gradient(to bottom, black, transparent 75%);
-  }
-
-  .hero-inner{
-    display: grid;
-    grid-template-columns: 1.1fr 0.9fr;
-    gap: 64px;
-    align-items: center;
-    position: relative;
-    z-index: 1;
-  }
-
-  .hero-name{
-    font-size: clamp(2.4rem, 5vw, 3.6rem);
-    font-weight: 700;
-    letter-spacing: -0.01em;
-  }
-  .hero-role{
-    font-family: var(--font-mono);
-    color: var(--accent);
-    font-size: clamp(1rem, 2vw, 1.25rem);
-    margin-top: 14px;
-    font-weight: 500;
-  }
-  .hero-desc{
-    margin-top: 24px;
-    max-width: 52ch;
-    color: var(--text-dim);
-    font-size: 1.05rem;
-  }
-
-  .hero-actions{
-    margin-top: 36px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 14px;
-  }
-
-  /* Botones — variantes primaria / secundaria / fantasma, todas con vocabulario de corchetes */
-  .btn{
-    display: inline-flex;
-    align-items: center;
-    gap: 9px;
-    font-family: var(--font-mono);
-    font-size: 0.92rem;
-    font-weight: 500;
-    padding: 12px 20px;
-    border-radius: var(--radius);
-    border: 1px solid var(--border-strong);
-    background: transparent;
-    color: var(--text);
-    cursor: pointer;
-    transition: border-color var(--transition), color var(--transition), background var(--transition), transform var(--transition);
-  }
-  .btn svg{ width: 16px; height: 16px; flex-shrink: 0; }
-  .btn:hover{ transform: translateY(-2px); }
-
-  .btn-primary{
-    border-color: var(--accent-dim);
-    color: var(--accent);
-  }
-  .btn-primary:hover{
-    background: rgba(255,180,84,0.1);
-    border-color: var(--accent);
-  }
-
-  .btn-secondary{
-    border-color: var(--accent-2-dim);
-    color: var(--accent-2);
-  }
-  .btn-secondary:hover{
-    background: rgba(94,234,212,0.1);
-    border-color: var(--accent-2);
-  }
-
-  .btn-ghost{
-    color: var(--text-dim);
-  }
-  .btn-ghost:hover{
-    color: var(--text);
-    border-color: var(--text-dim);
-  }
-
-  /* --- Panel "consola de motor" — elemento de firma del hero --- */
-  .console-panel{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 20px 60px -20px rgba(0,0,0,0.6);
-  }
-  .console-titlebar{
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 16px;
-    background: var(--surface-2);
-    border-bottom: 1px solid var(--border);
-  }
-  .console-dot{
-    width: 10px; height: 10px;
-    border-radius: 50%;
-    background: var(--text-faint);
-  }
-  .console-titlebar span:last-child{
-    margin-left: 8px;
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--text-faint);
-  }
-  .console-body{
-    padding: 22px 20px;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    color: var(--text-dim);
-  }
-  .console-body .line{ margin-bottom: 10px; white-space: pre-wrap; }
-  .console-body .prompt{ color: var(--accent-2); }
-  .console-body .key{ color: var(--text-faint); }
-  .console-body .val{ color: var(--text); }
-  .console-body .ok{ color: var(--accent); }
-  .console-body .final-cursor{
-    display: inline-block;
-    width: 7px; height: 1em;
-    background: var(--accent-2);
-    vertical-align: middle;
-    animation: blink 1.1s steps(1) infinite;
-  }
-
-  /* =============================================
-     6. PROYECTOS
-     ============================================= */
-  .projects-grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 28px;
-  }
-
-  .project-card{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    transition: transform var(--transition), border-color var(--transition);
-  }
-  .project-card:hover{
-    transform: translateY(-4px);
-    border-color: var(--border-strong);
-  }
-
-  /* Contenedor multimedia de cada proyecto (video / GIF / iframe) */
-  .media-frame{
-    aspect-ratio: 16 / 9;
-    background: #05070a;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-  }
-  .media-frame video,
-  .media-frame iframe{
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border: 0;
-  }
-  .media-placeholder-label{
-    font-family: var(--font-mono);
-    font-size: 0.78rem;
-    color: var(--text-faint);
-    text-align: center;
-    padding: 0 20px;
-  }
-
-  .project-body{
-    padding: 22px 22px 24px;
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-  }
-  .project-title{
-    font-size: 1.2rem;
-    font-weight: 600;
-    margin-bottom: 10px;
-  }
-  .project-desc{
-    color: var(--text-dim);
-    font-size: 0.92rem;
-    margin-bottom: 18px;
-    flex-grow: 1;
-  }
-
-  .tech-tags{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-bottom: 22px;
-  }
-  .tech-tag{
-    font-family: var(--font-mono);
-    font-size: 0.76rem;
-    color: var(--accent-2);
-    background: rgba(94,234,212,0.07);
-    border: 1px solid var(--accent-2-dim);
-    border-radius: 4px;
-    padding: 4px 8px;
-  }
-  .tech-tag::before{ content: "["; margin-right: 1px; opacity: 0.6; }
-  .tech-tag::after{ content: "]"; margin-left: 1px; opacity: 0.6; }
-
-  .project-actions{
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .project-actions .btn{
-    flex: 1;
-    justify-content: center;
-    padding: 10px 14px;
-    font-size: 0.82rem;
-  }
-
-  /* =============================================
-     7. HABILIDADES / SKILLS
-     ============================================= */
-  .skills-grid{
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 24px;
-  }
-
-  .skill-card{
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 28px 26px;
-  }
-  .skill-card-header{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 20px;
-  }
-  .skill-icon{
-    width: 34px; height: 34px;
-    border-radius: 6px;
-    background: rgba(255,180,84,0.1);
-    border: 1px solid var(--accent-dim);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--accent);
-    flex-shrink: 0;
-  }
-  .skill-icon svg{ width: 18px; height: 18px; }
-  .skill-card-title{
-    font-family: var(--font-display);
-    font-size: 1.05rem;
-    font-weight: 600;
-  }
-  .skill-list{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .skill-list li{
-    font-size: 0.92rem;
-    color: var(--text-dim);
-    padding-left: 18px;
-    position: relative;
-  }
-  .skill-list li::before{
-    content: ">";
-    position: absolute;
-    left: 0;
-    color: var(--accent-2);
-    font-family: var(--font-mono);
-  }
-
-  /* =============================================
-     8. CONTACTO
-     ============================================= */
-  .contact-inner{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 60px;
-    align-items: start;
-  }
-
-  .contact-text p{
-    color: var(--text-dim);
-    max-width: 46ch;
-    margin-bottom: 28px;
-  }
-  .contact-direct{
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-  }
-  .contact-direct-item{
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    color: var(--text-dim);
-    transition: border-color var(--transition), color var(--transition);
-  }
-  .contact-direct-item:hover{
-    border-color: var(--accent-2-dim);
-    color: var(--text);
-  }
-  .contact-direct-item svg{ width: 18px; height: 18px; color: var(--accent-2); flex-shrink: 0; }
-
-  /* Formulario */
-  .contact-form{
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-  .form-field label{
-    display: block;
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    color: var(--text-faint);
-    margin-bottom: 6px;
-  }
-  .form-field input,
-  .form-field textarea{
-    width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border-strong);
-    border-radius: var(--radius);
-    padding: 12px 14px;
-    color: var(--text);
-    font-family: var(--font-body);
-    font-size: 0.94rem;
-    transition: border-color var(--transition);
-  }
-  .form-field input:focus,
-  .form-field textarea:focus{
-    border-color: var(--accent-2);
-  }
-  .form-field textarea{ resize: vertical; min-height: 120px; }
-
-  .form-note{
-    font-size: 0.78rem;
-    color: var(--text-faint);
-    line-height: 1.5;
-  }
-
-  /* =============================================
-     9. FOOTER
-     ============================================= */
-  footer{
-    border-top: 1px solid var(--border);
-    padding: 32px 0;
-  }
-  .footer-inner{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  .footer-copy{
-    font-family: var(--font-mono);
-    font-size: 0.82rem;
-    color: var(--text-faint);
-  }
-  .footer-social{
-    display: flex;
-    gap: 16px;
-  }
-  .footer-social a{
-    width: 36px; height: 36px;
-    border: 1px solid var(--border-strong);
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    transition: color var(--transition), border-color var(--transition);
-  }
-  .footer-social a:hover{
-    color: var(--accent-2);
-    border-color: var(--accent-2-dim);
-  }
-  .footer-social svg{ width: 17px; height: 17px; }
-
-  /* =============================================
-     10. REVELADO AL HACER SCROLL
-     ============================================= */
-  .reveal{
-    opacity: 0;
-    transform: translateY(24px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
-  }
-  .reveal.is-visible{
-    opacity: 1;
-    transform: translateY(0);
-  }
-
-  /* =============================================
-     11. RESPONSIVO
-     ============================================= */
-  @media (max-width: 900px){
-    .hero-inner{
-      grid-template-columns: 1fr;
+  <style>
+    /* ============================================
+       VARIABLES & RESET
+    ============================================ */
+    :root {
+      --bg:         #0B0F19;
+      --surface:    #111827;
+      --surface-2:  #1A2233;
+      --border:     #1E2A3A;
+      --cyan:       #00B4D8;
+      --cyan-dim:   #00B4D820;
+      --violet:     #7B2FBE;
+      --violet-dim: #7B2FBE20;
+      --text:       #F0F4F8;
+      --text-muted: #8A9AB5;
+      --text-dim:   #4A5A72;
+      --mono:       'JetBrains Mono', monospace;
+      --sans:       'Inter', sans-serif;
+      --display:    'Space Grotesk', sans-serif;
+      --radius:     8px;
+      --radius-lg:  16px;
+      --max-w:      1100px;
+      --transition: 0.2s ease;
     }
-    .console-panel{ order: -1; }
-    .contact-inner{
-      grid-template-columns: 1fr;
-      gap: 40px;
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-  }
 
-  @media (max-width: 720px){
-    section{ padding: 80px 0; }
-    .hero{ padding-top: 130px; min-height: auto; }
+    html {
+      scroll-behavior: smooth;
+    }
 
-    .nav-links{
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a {
+      color: var(--cyan);
+      text-decoration: none;
+      transition: opacity var(--transition);
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    /* ============================================
+       UTILITY CLASSES
+    ============================================ */
+    .container {
+      width: 100%;
+      max-width: var(--max-w);
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    .section--tight {
+      padding: 64px 0;
+    }
+
+    .eyebrow {
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--display);
+      font-size: clamp(28px, 4vw, 40px);
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 580px;
+      line-height: 1.7;
+      margin-bottom: 56px;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      border: 1px solid var(--cyan);
+      border-radius: 4px;
+      padding: 3px 8px;
+      letter-spacing: 0.04em;
+    }
+
+    .tag--violet {
+      color: #B67FE8;
+      background: var(--violet-dim);
+      border-color: var(--violet);
+    }
+
+    .tag--muted {
+      color: var(--text-muted);
+      background: transparent;
+      border-color: var(--border);
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      border: none;
+    }
+
+    /* ============================================
+       NAVIGATION
+    ============================================ */
+    .nav {
       position: fixed;
-      top: 68px;
-      left: 0; right: 0;
-      background: var(--bg-alt);
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(11, 15, 25, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      flex-direction: column;
-      gap: 0;
-      padding: 8px 24px 16px;
-      transform: translateY(-130%);
-      opacity: 0;
-      pointer-events: none;
-      transition: transform var(--transition), opacity var(--transition);
+      height: 64px;
+      display: flex;
+      align-items: center;
     }
-    .nav-links.is-open{
-      transform: translateY(0);
-      opacity: 1;
-      pointer-events: auto;
-    }
-    .nav-links a{
-      padding: 14px 0;
-      border-bottom: 1px solid var(--border);
+
+    .nav__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       width: 100%;
     }
-    .nav-toggle{ display: block; }
 
-    .hero-actions{ flex-direction: column; align-items: stretch; }
-    .project-actions{ flex-direction: column; }
-  }
+    .nav__logo {
+      font-family: var(--display);
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
 
-  @media (max-width: 480px){
-    .container{ padding: 0 18px; }
-    .hero-name{ font-size: 2rem; }
-  }
-</style>
+    .nav__logo span {
+      color: var(--cyan);
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav__links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-muted);
+      transition: color var(--transition);
+    }
+
+    .nav__links a:hover {
+      color: var(--text);
+      opacity: 1;
+    }
+
+    .nav__cta {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--cyan) !important;
+      border: 1px solid var(--cyan);
+      border-radius: var(--radius);
+      padding: 7px 16px;
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .nav__cta:hover {
+      background: var(--cyan);
+      color: var(--bg) !important;
+      opacity: 1;
+    }
+
+    /* Mobile nav */
+    .nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .nav__hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+
+    .nav__mobile {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 24px;
+      flex-direction: column;
+      gap: 20px;
+      z-index: 99;
+    }
+
+    .nav__mobile.open {
+      display: flex;
+    }
+
+    .nav__mobile a {
+      font-size: 16px;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ============================================
+       HERO
+    ============================================ */
+    .hero {
+      padding-top: 160px;
+      padding-bottom: 96px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grid background */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 64px 64px;
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Cyan radial glow bottom-left */
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -100px;
+      left: -100px;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0,180,216,0.08) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero__inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero__status {
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--cyan);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero__status::before {
+      content: '>';
+      color: var(--text-dim);
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      height: 14px;
+      background: var(--cyan);
+      vertical-align: middle;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0; }
+    }
+
+    .hero__name {
+      font-family: var(--display);
+      font-size: clamp(40px, 7vw, 80px);
+      font-weight: 700;
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .hero__name span {
+      color: var(--cyan);
+    }
+
+    .hero__title {
+      font-family: var(--display);
+      font-size: clamp(16px, 2.5vw, 22px);
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      letter-spacing: -0.01em;
+    }
+
+    .hero__desc {
+      font-size: 18px;
+      line-height: 1.75;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin-bottom: 48px;
+    }
+
+    .hero__desc strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .hero__location {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      margin-bottom: 40px;
+      letter-spacing: 0.08em;
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      border-radius: var(--radius);
+      font-family: var(--mono);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+    }
+
+    .btn--primary {
+      background: var(--cyan);
+      color: var(--bg);
+    }
+
+    .btn--primary:hover {
+      background: #00C8F0;
+      opacity: 1;
+      color: var(--bg);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn--outline:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      opacity: 1;
+    }
+
+    /* ============================================
+       FEATURED PROJECT — CURSO 120 CLASES
+    ============================================ */
+    .featured {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .featured__header {
+      margin-bottom: 64px;
+    }
+
+    .featured__label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .featured__label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .featured__intro {
+      font-size: 17px;
+      color: var(--text-muted);
+      max-width: 680px;
+      line-height: 1.75;
+    }
+
+    /* Architecture diagram */
+    .arch {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 40px 32px;
+      margin: 48px 0;
+      overflow-x: auto;
+    }
+
+    .arch__title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+    }
+
+    .arch__flow {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      min-width: 640px;
+    }
+
+    .arch__node {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 12px;
+      text-align: center;
+      position: relative;
+    }
+
+    .arch__node--accent {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    .arch__node-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--cyan);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .arch__node-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .arch__arrow {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+      padding: 0 8px;
+      flex-shrink: 0;
+    }
+
+    .arch__arrow-line {
+      width: 32px;
+      height: 1px;
+      background: var(--cyan);
+      opacity: 0.5;
+    }
+
+    .arch__arrow-label {
+      font-family: var(--mono);
+      font-size: 9px;
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+
+    /* Fork at the end */
+    .arch__fork {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      flex: 1.2;
+    }
+
+    .arch__fork-node {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      text-align: center;
+    }
+
+    .arch__fork-node--violet {
+      border-color: var(--violet);
+      background: var(--violet-dim);
+    }
+
+    .arch__fork-label {
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 500;
+      color: #B67FE8;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+
+    .arch__fork-sub {
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    /* Decisions section */
+    .decisions {
+      margin: 48px 0;
+    }
+
+    .decisions__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1px;
+      background: var(--border);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+    }
+
+    .decision {
+      background: var(--bg);
+      padding: 28px;
+    }
+
+    .decision__title {
+      font-family: var(--display);
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .decision__title::before {
+      content: '//';
+      font-family: var(--mono);
+      color: var(--cyan);
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    .decision__text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+      padding-left: 32px;
+      margin: 48px 0;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      bottom: 8px;
+      width: 1px;
+      background: linear-gradient(to bottom, var(--cyan), var(--violet));
+    }
+
+    .timeline__item {
+      position: relative;
+      margin-bottom: 36px;
+    }
+
+    .timeline__item:last-child {
+      margin-bottom: 0;
+    }
+
+    .timeline__dot {
+      position: absolute;
+      left: -38px;
+      top: 6px;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 2px solid var(--cyan);
+    }
+
+    .timeline__dot--final {
+      border-color: var(--violet);
+      background: var(--violet);
+    }
+
+    .timeline__meta {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-dim);
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+    }
+
+    .timeline__title {
+      font-family: var(--display);
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .timeline__desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* Media placeholder */
+    .media-placeholder {
+      background: var(--bg);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-lg);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 32px 0;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 12px;
+      text-align: center;
+      padding: 24px;
+    }
+
+    .media-placeholder__icon {
+      font-size: 32px;
+      opacity: 0.4;
+    }
+
+    /* Status badge */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--mono);
+      font-size: 12px;
+      color: #4ADE80;
+      background: rgba(74, 222, 128, 0.08);
+      border: 1px solid rgba(74, 222, 128, 0.25);
+      border-radius: 100px;
+      padding: 6px 14px;
+      margin-top: 32px;
+    }
+
+    .status-badge::before {
+      content: '';
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #4ADE80;
+      animation: pulse-green 2s infinite;
+    }
+
+    @keyframes pulse-green {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: 0.4; }
+    }
+
+    /* ============================================
+       PROJECTS GRID
+    ============================================ */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: border-color var(--transition), transform var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-4px);
+    }
+
+    .project-card__media {
+      aspect-ratio: 16 / 9;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      flex-direction: column;
+      gap: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .project-card__media img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .project-card__media-placeholder {
+      font-size: 28px;
+      opacity: 0.3;
+    }
+
+    .project-card__body {
+      padding: 24px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .project-card__eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .project-card__title {
+      font-family: var(--display);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 12px;
+      line-height: 1.3;
+    }
+
+    .project-card__desc {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.65;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    .project-card__highlight {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--cyan);
+      background: var(--cyan-dim);
+      border-left: 2px solid var(--cyan);
+      padding: 10px 14px;
+      border-radius: 0 var(--radius) var(--radius) 0;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    /* ============================================
+       STACK
+    ============================================ */
+    .stack-groups {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .stack-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+    }
+
+    .stack-group__title {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--cyan);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .stack-items {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .stack-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .stack-item__name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .stack-item__context {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* ============================================
+       ABOUT
+    ============================================ */
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .about__text p {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.75;
+      margin-bottom: 20px;
+    }
+
+    .about__text p:last-child {
+      margin-bottom: 0;
+    }
+
+    .about__text strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .about__photo {
+      border-radius: var(--radius-lg);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      aspect-ratio: 4 / 5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-dim);
+      font-family: var(--mono);
+      font-size: 11px;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .about__credential {
+      margin-top: 32px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .about__credential-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--text-dim);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .about__credential-text {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .about__credential-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       CONTACT
+    ============================================ */
+    .contact {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+    }
+
+    .contact__inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: start;
+    }
+
+    .contact__info h3 {
+      font-family: var(--display);
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 16px;
+    }
+
+    .contact__info p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .contact__bullets {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .contact__bullet {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .contact__bullet::before {
+      content: '→';
+      font-family: var(--mono);
+      color: var(--cyan);
+      flex-shrink: 0;
+    }
+
+    /* Form */
+    .form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .form__group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form__label {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .form__input,
+    .form__textarea {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      font-family: var(--sans);
+      font-size: 15px;
+      color: var(--text);
+      width: 100%;
+      transition: border-color var(--transition);
+      outline: none;
+      resize: vertical;
+    }
+
+    .form__input:focus,
+    .form__textarea:focus {
+      border-color: var(--cyan);
+    }
+
+    .form__input::placeholder,
+    .form__textarea::placeholder {
+      color: var(--text-dim);
+    }
+
+    .form__textarea {
+      min-height: 140px;
+    }
+
+    .form__submit {
+      align-self: flex-start;
+    }
+
+    .form__success {
+      display: none;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: #4ADE80;
+      padding: 14px 16px;
+      background: rgba(74,222,128,0.08);
+      border: 1px solid rgba(74,222,128,0.25);
+      border-radius: var(--radius);
+    }
+
+    /* ============================================
+       FOOTER
+    ============================================ */
+    .footer {
+      padding: 32px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .footer__copy {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+
+    .footer__back {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--text-dim);
+      transition: color var(--transition);
+    }
+
+    .footer__back:hover {
+      color: var(--cyan);
+      opacity: 1;
+    }
+
+    /* ============================================
+       RESPONSIVE
+    ============================================ */
+    @media (max-width: 768px) {
+      .section       { padding: 64px 0; }
+      .section-title { font-size: 28px; }
+
+      .nav__links    { display: none; }
+      .nav__hamburger { display: flex; }
+
+      .hero          { padding-top: 120px; }
+
+      .about__grid   { grid-template-columns: 1fr; }
+      .about__photo  { aspect-ratio: 1 / 1; max-width: 280px; }
+
+      .contact__inner { grid-template-columns: 1fr; }
+
+      .arch__flow    { gap: 0; }
+      .arch__node-label { font-size: 9px; }
+
+      .footer__inner { flex-direction: column; text-align: center; }
+
+      .decisions__grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 480px) {
+      .hero__actions { flex-direction: column; }
+      .btn           { justify-content: center; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cursor         { animation: none; }
+      .status-badge::before { animation: none; }
+      html            { scroll-behavior: auto; }
+    }
+  </style>
 </head>
 <body>
 
-  <!-- =============================================
-       NAVEGACIÓN
-       ============================================= -->
-  <header class="navbar">
-    <div class="container nav-inner">
-      <a href="#inicio" class="logo">miguel.porras<span class="cursor"></span></a>
+  <!-- ============================================
+       NAVIGATION
+  ============================================ -->
+  <nav class="nav" role="navigation" aria-label="Navegación principal">
+    <div class="container">
+      <div class="nav__inner">
+        <a href="#inicio" class="nav__logo">Miguel<span>.</span></a>
 
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú de navegación" aria-expanded="false">☰</button>
+        <ul class="nav__links" role="list">
+          <li><a href="#proyecto">Proyecto</a></li>
+          <li><a href="#trabajos">Trabajos</a></li>
+          <li><a href="#stack">Stack</a></li>
+          <li><a href="#sobre-mi">Sobre mí</a></li>
+          <li><a href="#contacto" class="nav__cta">Escribirme</a></li>
+        </ul>
 
-      <ul class="nav-links" id="navLinks">
-        <li><a href="#inicio">Inicio</a></li>
-        <li><a href="#proyectos">Proyectos</a></li>
-        <li><a href="#skills">Skills</a></li>
-        <li><a href="#contacto">Contacto</a></li>
-      </ul>
+        <button class="nav__hamburger" aria-label="Abrir menú" id="menuBtn">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
     </div>
-  </header>
+  </nav>
 
-  <!-- =============================================
+  <!-- Mobile nav dropdown -->
+  <div class="nav__mobile" id="mobileMenu" role="navigation">
+    <a href="#proyecto" class="mobile-link">Proyecto</a>
+    <a href="#trabajos" class="mobile-link">Trabajos</a>
+    <a href="#stack" class="mobile-link">Stack</a>
+    <a href="#sobre-mi" class="mobile-link">Sobre mí</a>
+    <a href="#contacto" class="mobile-link">Escribirme</a>
+  </div>
+
+
+  <!-- ============================================
        HERO
-       ============================================= -->
-  <section class="hero" id="inicio">
-    <div class="container hero-inner">
-      <div class="hero-copy">
-        <p class="eyebrow">unity_developer.cs</p>
-        <h1 class="hero-name">Miguel A. Porras</h1>
-        <p class="hero-role">Unity Game Developer &nbsp;|&nbsp; C# Programmer</p>
-        <p class="hero-desc">
-          Desarrollador de videojuegos y sistemas interactivos en Unity, especializado en lógica de juego,
-          integración de hardware y mecánicas C#.
+  ============================================ -->
+  <main>
+  <section class="hero section" id="inicio">
+    <div class="container">
+      <div class="hero__inner">
+
+        <p class="hero__status">
+          status: disponible para trabajo remoto&nbsp;<span class="cursor" aria-hidden="true"></span>
         </p>
 
-        <div class="hero-actions">
-          <!-- Reemplaza el correo si cambia -->
-          <a class="btn btn-primary" href="mailto:miguelangel10b@gmail.com">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
-            Enviar correo
-          </a>
-          <!-- Reemplaza el número si cambia (formato internacional sin espacios para wa.me) -->
-          <a class="btn btn-secondary" href="https://wa.me/573105465868" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            WhatsApp
-          </a>
-          <!-- TODO: reemplaza con la URL real de tu perfil de LinkedIn -->
-          <a class="btn btn-ghost" href="https://www.linkedin.com/in/tu-usuario" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/><path d="M8 9h4v2a4 4 0 0 1 4-2c3 0 4 2 4 5v7h-4v-6c0-1.5-.5-3-2-3s-2 1.5-2 3v6H8z"/></svg>
-            LinkedIn
-          </a>
-        </div>
-      </div>
+        <h1 class="hero__name">Miguel<br><span>Porras</span></h1>
 
-      <!-- Panel "consola" — muestra datos reales a modo de log de motor -->
-      <div class="console-panel bracket-frame">
-        <div class="console-titlebar">
-          <span class="console-dot"></span><span class="console-dot"></span><span class="console-dot"></span>
-          <span>engine_console — read only</span>
+        <p class="hero__title">Game Developer &amp; STEAM Systems Designer</p>
+
+        <p class="hero__location">MEDELLÍN, COLOMBIA</p>
+
+        <p class="hero__desc">
+          Diseño sistemas donde <strong>el hardware responde al software,
+          el software responde al cuerpo,</strong> y todo junto enseña algo real.
+          <br><br>
+          5 años formando estudiantes en programación, robótica y desarrollo de
+          videojuegos. Construyo experiencias interactivas donde Unity, Arduino
+          y el aprendizaje son un solo objeto — no tres disciplinas separadas.
+        </p>
+
+        <div class="hero__actions">
+          <a href="#proyecto" class="btn btn--primary">Ver proyecto principal</a>
+          <a href="#contacto" class="btn btn--outline">Escribirme</a>
         </div>
-        <div class="console-body">
-          <div class="line"><span class="prompt">&gt;</span> cargando_perfil.exe</div>
-          <div class="line"><span class="key">motor</span>&nbsp;: <span class="val">Unity 2D / 3D</span></div>
-          <div class="line"><span class="key">lenguaje</span>&nbsp;: <span class="val">C#</span></div>
-          <div class="line"><span class="key">enfoque</span>&nbsp;: <span class="val">mecánicas de juego, sistemas de UI, físicas</span></div>
-          <div class="line"><span class="key">hardware</span>&nbsp;: <span class="val">integración Arduino / sensores / serial</span></div>
-          <div class="line"><span class="key">arte_3d</span>&nbsp;: <span class="val">Blender</span></div>
-          <div class="line"><span class="key">estado</span>&nbsp;: <span class="ok">disponible para nuevos proyectos</span></div>
-          <div class="line"><span class="prompt">&gt;</span> _<span class="final-cursor"></span></div>
-        </div>
+
       </div>
     </div>
   </section>
 
-  <!-- =============================================
-       PROYECTOS DESTACADOS
-       ============================================= -->
-  <section id="proyectos">
+
+  <!-- ============================================
+       FEATURED PROJECT — CURSO 120 CLASES
+  ============================================ -->
+  <section class="section featured" id="proyecto">
     <div class="container">
-      <p class="eyebrow">proyectos_destacados</p>
-      <h2 class="section-title">Trabajo <span>seleccionado</span></h2>
+
+      <p class="featured__label">Featured Project</p>
+
+      <h2 class="section-title">Biomedical Game Course</h2>
+      <p class="featured__intro">
+        Un sistema de 120 clases donde un estudiante construye, desde cero,
+        un ecosistema tecnológico físico-digital: guante con sensores,
+        mano robótica articulada, videojuego en Unity y aplicación de
+        realidad aumentada — todo conectado, todo funcional, ninguna pieza
+        opcional.
+      </p>
+
+      <!-- =============================================
+           IMAGEN PRINCIPAL DEL PROYECTO
+           Reemplaza el bloque .media-placeholder por:
+           <img src="assets/img/curso-hero.jpg"
+                alt="Sistema completo: guante, prótesis y Unity funcionando"
+                style="border-radius:16px; margin:32px 0;" />
+           Tamaño recomendado: 1200×675px (16:9)
+           Mejor opción: captura de Unity con el nanobot y el HUD médico
+      ============================================= -->
+      <div class="media-placeholder" style="margin-top: 40px;">
+        <span class="media-placeholder__icon">🖼</span>
+        <span>IMAGEN: Captura de Unity con el nanobot y el HUD médico activo</span>
+        <span>Reemplaza este bloque — ver comentario en el código</span>
+      </div>
+
+      <!-- STATUS -->
+      <div class="status-badge">En ejecución · Una estudiante activa, clase 50 de 120</div>
+
+      <!-- ARCHITECTURE -->
+      <div class="arch" style="margin-top: 56px;">
+        <p class="arch__title">// Arquitectura del sistema</p>
+        <div class="arch__flow">
+
+          <div class="arch__node arch__node--accent">
+            <p class="arch__node-label">Guante</p>
+            <p class="arch__node-sub">5 sensores<br>Velostat</p>
+          </div>
+
+          <div class="arch__arrow">
+            <div class="arch__arrow-line"></div>
+            <p class="arch__arrow-label">serial analógico</p>
+          </div>
+
+          <div class="arch__node">
+            <p class="arch__node-label">Arduino → ESP32</p>
+            <p class="arch__node-sub">Microcontrolador<br>WiFi UDP (mes 10)</p>
+          </div>
+
+          <div class="arch__arrow">
+            <div class="arch__arrow-line"></div>
+            <p class="arch__arrow-label">protocolo custom</p>
+          </div>
+
+          <div class="arch__node arch__node--accent">
+            <p class="arch__node-label">Unity 3D</p>
+            <p class="arch__node-sub">Juego + App Android<br>AR Foundation</p>
+          </div>
+
+          <div class="arch__arrow">
+            <div class="arch__arrow-line"></div>
+            <p class="arch__arrow-label">comandos PWM</p>
+          </div>
+
+          <div class="arch__fork">
+            <div class="arch__fork-node">
+              <p class="arch__node-label" style="font-size:10px; color:var(--cyan);">Mano Robótica</p>
+              <p class="arch__fork-sub">5 servos · tendones nylon</p>
+            </div>
+            <div class="arch__fork-node arch__fork-node--violet">
+              <p class="arch__fork-label">App AR</p>
+              <p class="arch__fork-sub">Corazón 3D + HUD holográfico</p>
+            </div>
+          </div>
+
+        </div>
+        <p style="font-family:var(--mono); font-size:10px; color:var(--text-dim); margin-top:20px;">
+          * Comunicación bidireccional — el juego también controla la prótesis física
+        </p>
+      </div>
+
+      <!-- DECISIONS -->
+      <div class="decisions">
+        <h3 class="section-title" style="font-size:24px; margin-bottom:8px;">Decisiones de arquitectura</h3>
+        <p style="font-size:15px; color:var(--text-muted); margin-bottom:32px;">
+          Cada componente tiene una razón. Ninguno fue elegido por defecto.
+        </p>
+
+        <div class="decisions__grid">
+
+          <div class="decision">
+            <h4 class="decision__title">UDP sobre TCP para datos de movimiento</h4>
+            <p class="decision__text">
+              TCP garantiza que cada paquete llegue. Para datos de posición de
+              dedos actualizados 50 veces por segundo, un paquete perdido se
+              corrige solo con el siguiente. La latencia que introduce TCP
+              es más costosa que la imprecisión ocasional de UDP.
+            </p>
+          </div>
+
+          <div class="decision">
+            <h4 class="decision__title">ESP32 sobre Arduino para la fase inalámbrica</h4>
+            <p class="decision__text">
+              El ESP32 tiene WiFi integrado, corre a 240 MHz (15× más rápido),
+              tiene 260× más RAM y cuesta aproximadamente la mitad que un Arduino
+              con shield WiFi. La migración al ESP32 en el mes 10 elimina el cable
+              y convierte el guante en un dispositivo verdaderamente portátil.
+            </p>
+          </div>
+
+          <div class="decision">
+            <h4 class="decision__title">Velostat como sensor de flexión</h4>
+            <p class="decision__text">
+              El material piezorresistivo más accesible disponible. Sin componentes
+              de importación, sin mínimos de compra, fabricable en casa. La curva de
+              aprendizaje del sensor es parte del currículo — el estudiante entiende
+              por qué funciona, no solo cómo conectarlo.
+            </p>
+          </div>
+
+          <div class="decision">
+            <h4 class="decision__title">Object Pooling para enemigos en Android</h4>
+            <p class="decision__text">
+              Instantiate() y Destroy() generan garbage collection. En GPU móvil,
+              las pausas del GC son caídas de FPS visibles. El pool pre-instancia
+              objetos al inicio y los activa/desactiva. Resultado: cero GC durante
+              el combate.
+            </p>
+          </div>
+
+          <div class="decision">
+            <h4 class="decision__title">Narrativa biomédica como contexto pedagógico</h4>
+            <p class="decision__text">
+              Un nanobot dentro del cuerpo humano justifica cada sistema: el pulso
+              real del estudiante activa el sistema inmune del juego. Los glóbulos
+              blancos son los enemigos. La arteria bloqueada es la misión.
+              La biología no es decoración — es la mecánica.
+            </p>
+          </div>
+
+          <div class="decision">
+            <h4 class="decision__title">Protocolo serial bidireccional personalizado</h4>
+            <p class="decision__text">
+              <code style="font-family:var(--mono); font-size:12px; color:var(--cyan);">
+                D:v0,v1,v2,v3,v4 | P:bpm | H:1/0 | V:a0-a4
+              </code><br>
+              Un protocolo propio con separadores y prefijos permite al sistema
+              discriminar tipos de dato en tiempo real sin parser externo.
+              El estudiante aprende diseño de protocolo como parte del curso.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- VIDEO -->
+      <!-- =============================================
+           VIDEO DEL SISTEMA FUNCIONANDO
+           Opción A — Video propio subido a YouTube:
+           Reemplaza el .media-placeholder por:
+           <div style="position:relative; padding-bottom:56.25%; margin:48px 0; border-radius:16px; overflow:hidden;">
+             <iframe style="position:absolute;inset:0;width:100%;height:100%;border:0;"
+               src="https://www.youtube.com/embed/TU_VIDEO_ID"
+               title="Sistema Biomédico funcionando" allowfullscreen>
+             </iframe>
+           </div>
+
+           Opción B — Video local (.mp4) en la carpeta assets/video/:
+           <video controls style="width:100%;border-radius:16px;margin:48px 0;" poster="assets/img/video-thumb.jpg">
+             <source src="assets/video/demo.mp4" type="video/mp4">
+           </video>
+           Tamaño máximo recomendado para GitHub Pages: 25 MB
+      ============================================= -->
+      <div class="media-placeholder" style="margin-top: 48px;">
+        <span class="media-placeholder__icon">▶</span>
+        <span>VIDEO: Demo del sistema completo funcionando (30–60 segundos)</span>
+        <span>Ver instrucciones en el código para embeber YouTube o video local</span>
+      </div>
+
+      <!-- TIMELINE -->
+      <div style="margin-top: 64px;">
+        <h3 class="section-title" style="font-size:24px; margin-bottom:8px;">12 meses · 9 hitos</h3>
+        <p style="font-size:15px; color:var(--text-muted); margin-bottom:40px;">
+          Cada hito marca un sistema funcional demostrable, no solo conocimiento adquirido.
+        </p>
+
+        <div class="timeline">
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 1–3 · Hito Alpha</p>
+            <h4 class="timeline__title">Nanobot funcional + sensor de pulso integrado</h4>
+            <p class="timeline__desc">El ritmo cardíaco del estudiante afecta el juego en tiempo real. Primera integración hardware-software del curso.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 4–5 · Hito Beta</p>
+            <h4 class="timeline__title">Mano virtual completa con rigging en Blender</h4>
+            <p class="timeline__desc">Los 5 dedos del guante controlan 5 huesos del modelo 3D. Rigging, weight painting e importación a Unity.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 6 · Demo Day Fase 2</p>
+            <h4 class="timeline__title">Sistema físico-virtual integrado</h4>
+            <p class="timeline__desc">Guante → mano virtual → prótesis física respondiendo simultáneamente. Primera demostración del ecosistema completo.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 7 · Hito Mecánico</p>
+            <h4 class="timeline__title">Prótesis robótica ensamblada y calibrada</h4>
+            <p class="timeline__desc">Tendones de nylon, resortes de retorno elástico, 5 servomotores y fuente de alimentación externa. Todo fabricado por el estudiante.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 8 · Demo Day Fase 3</p>
+            <h4 class="timeline__title">Guante wearable con carcasa impresa en 3D</h4>
+            <p class="timeline__desc">Circuito soldado en PCB, carcasa de muñeca impresa en PLA, cable extendido a 5 metros. El estudiante camina mientras juega.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 9 · Graduación Fase 3</p>
+            <h4 class="timeline__title">Dos misiones biomédicas jugables</h4>
+            <p class="timeline__desc">Sutura de tejido con gesto de pinza (LineRenderer como hilo quirúrgico). Desbloqueo arterial donde el pulso real define la presión del flujo.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 10 · Hito Móvil</p>
+            <h4 class="timeline__title">App Android compilada e instalada</h4>
+            <p class="timeline__desc">Joystick virtual, giroscopio, optimización ETC2 + Lightmapping. El juego funciona sin Unity abierto en cualquier Android.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot"></div>
+            <p class="timeline__meta">Mes 11 · Hito Tecnológico</p>
+            <h4 class="timeline__title">ESP32 reemplaza el cable. AR coloca el corazón en la mesa.</h4>
+            <p class="timeline__desc">AR Foundation coloca un corazón 3D sobre la mesa real. Interfaz holográfica muestra BPM en tiempo real flotando sobre el órgano. La prótesis responde sin ningún cable.</p>
+          </div>
+
+          <div class="timeline__item">
+            <div class="timeline__dot timeline__dot--final"></div>
+            <p class="timeline__meta">Mes 12 · Graduación Final</p>
+            <h4 class="timeline__title">Suite biomédica integral</h4>
+            <p class="timeline__desc">Guante inalámbrico + prótesis sincronizada + app Android + realidad aumentada + portfolio digital del estudiante.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- TAGS -->
+      <div class="tags" style="margin-top: 40px;">
+        <span class="tag">Unity 3D</span>
+        <span class="tag">C# · 30+ scripts</span>
+        <span class="tag">Arduino · ESP32</span>
+        <span class="tag">AR Foundation</span>
+        <span class="tag">Android SDK</span>
+        <span class="tag">Blender</span>
+        <span class="tag">Firebase</span>
+        <span class="tag">WiFi UDP</span>
+        <span class="tag">3D Printing</span>
+        <span class="tag">Curriculum Design</span>
+      </div>
+
+    </div>
+  </section>
+
+
+  <!-- ============================================
+       OTHER PROJECTS
+  ============================================ -->
+  <section class="section" id="trabajos">
+    <div class="container">
+
+      <span class="eyebrow">Projects</span>
+      <h2 class="section-title">Otros trabajos</h2>
+      <p class="section-subtitle">
+        Proyectos completos entregados — desde gamificación corporativa
+        hasta integración física de videojuegos.
+      </p>
 
       <div class="projects-grid">
 
-        <!-- ============ PROYECTO 1 ============ -->
-        <article class="project-card reveal">
-          <div class="media-frame">
-           <video autoplay loop muted playsinline style="width: 100%; height: 100%; object-fit: cover;">
-            <source src="Base de Datos 18_09_2019 12_29_52 a. m-.mp4" type="video/mp4">
-            Tu navegador no soporta la reproducción de video.
-           </video>
-            <!--
-              REEMPLAZA ESTE BLOQUE con tu video de demostración.
-
-              OPCIÓN A — Video propio (mp4/webm alojado en tu repo o CDN):
-              <video controls poster="ruta/a/tu/imagen-portada.jpg">
-                <source src="ruta/a/tu/video-demo.mp4" type="video/mp4">
-              </video>
-
-              OPCIÓN B — Video de YouTube incrustado:
-              <iframe src="https://www.youtube.com/embed/TU_ID_DE_VIDEO"
-                      title="Demo Proyecto Alpha" allowfullscreen></iframe>
-            
-            <p class="media-placeholder-label">// espacio para video / GIF de demostración<br>Reemplazar por &lt;video&gt; o &lt;iframe&gt;</p>-->
+        <!-- HACEB -->
+        <article class="project-card">
+          <!-- =============================================
+               HACEB — IMAGEN DE PORTADA
+               Reemplaza el bloque interno de .project-card__media por:
+               <img src="assets/img/haceb-cover.jpg"
+                    alt="Comunidad HACEB — Gamificación HR" />
+               Tamaño recomendado: 800×450px
+               Opciones: captura del juego principal, la fábrica 3D,
+               o la pantalla de inicio del juego.
+               Si no tienes permiso de HACEB, usa una captura del minijuego
+               Ruta de Valores (es de tu autoría).
+          ============================================= -->
+          <div class="project-card__media">
+            <span class="project-card__media-placeholder">🏭</span>
+            <span style="font-size:10px; text-align:center; padding:0 16px;">
+              IMAGEN: Captura del juego Comunidad HACEB<br>
+              Ver comentario en el código
+            </span>
           </div>
-          <div class="project-body">
-            <h3 class="project-title">Base de datos Comunidad HACEB</h3>
-            <p class="project-desc">
-              <!-- Reemplaza con la descripción técnica real del proyecto -->
-              Sistema de combate en tercera persona desarrollado en Unity, con máquina de estados para
-              animaciones, detección de colisiones por hitboxes y arquitectura de componentes desacoplada en C#.
+
+          <div class="project-card__body">
+            <p class="project-card__eyebrow">Internship · 2019 · Equipo de 4</p>
+            <h3 class="project-card__title">Comunidad HACEB</h3>
+            <p class="project-card__desc">
+              Juego serio 3D en tercera persona para el proceso de selección de
+              Industrias HACEB — una de las empresas de electrodomésticos más
+              grandes de Colombia. El candidato recorre la planta real de Girardota
+              y pasa por minijuegos que evalúan competencias sin que lo sepa de
+              forma explícita.
             </p>
-            <div class="tech-tags">
-              <span class="tech-tag">Unity 3D</span>
-              <span class="tech-tag">C#</span>
-              <span class="tech-tag">UI/Canvas</span>
-              <span class="tech-tag">Físicas</span>
-            </div>
-            <div class="project-actions">
-              <!-- TODO: reemplaza con el link real al repositorio -->
-              <a class="btn btn-ghost" href="https://github.com/tu-usuario/proyecto-alpha" target="_blank" rel="noopener">Ver código</a>
-              <!-- TODO: reemplaza con el link a la demo jugable o página de detalle -->
-              <a class="btn btn-primary" href="#" target="_blank" rel="noopener">Probar demo</a>
+            <p class="project-card__highlight">
+              Entregué también una aplicación de administración separada (Unity + Firebase)
+              para que RR.HH. gestionara candidatos, modificara contenido del juego
+              y exportara resultados — sin tocar el código.
+            </p>
+            <div class="tags">
+              <span class="tag">Unity · C#</span>
+              <span class="tag">Firebase</span>
+              <span class="tag">3D · Tercera persona</span>
+              <span class="tag">Diseño de minijuegos</span>
+              <span class="tag">Team Lead</span>
             </div>
           </div>
         </article>
 
-        <!-- ============ PROYECTO 2 ============ -->
-        <article class="project-card reveal">
-          <div class="media-frame">
-            <!-- REEMPLAZA con tu video/GIF — ver instrucciones en el Proyecto Alpha -->
-            <p class="media-placeholder-label">// espacio para video / GIF de demostración<br>Reemplazar por &lt;video&gt; o &lt;iframe&gt;</p>
+        <!-- WHACK-A-MOLE -->
+        <article class="project-card">
+          <!-- =============================================
+               WHACK-A-MOLE — IMAGEN DE PORTADA
+               Reemplaza el bloque interno de .project-card__media por:
+               <img src="assets/img/topo-cover.jpg"
+                    alt="Golpea al Topo — Hardware + Unity" />
+               Tamaño recomendado: 800×450px
+               Mejor opción: foto del controlador físico (matriz de botones)
+               junto a la pantalla del juego.
+               Segunda opción: captura del juego con el controlador visible.
+          ============================================= -->
+          <div class="project-card__media">
+            <span class="project-card__media-placeholder">🎮</span>
+            <span style="font-size:10px; text-align:center; padding:0 16px;">
+              IMAGEN: Controlador físico (matriz de botones) + pantalla del juego<br>
+              Ver comentario en el código
+            </span>
           </div>
-          <div class="project-body">
-            <h3 class="project-title">Proyecto Beta — Integración Arduino ↔ Unity</h3>
-            <p class="project-desc">
-              <!-- Reemplaza con la descripción técnica real del proyecto -->
-              Puente de comunicación serial entre un microcontrolador Arduino y Unity, permitiendo que
-              sensores físicos (botones, potenciómetros, IMU) controlen mecánicas del juego en tiempo real.
+
+          <div class="project-card__body">
+            <p class="project-card__eyebrow">Proyecto personal · Completo</p>
+            <h3 class="project-card__title">Whack-a-Mole + Arduino</h3>
+            <p class="project-card__desc">
+              Juego de arcade terminado con arte y audio finales — y un controlador
+              físico fabricado desde cero: una matriz de botones Arduino conectada
+              a Unity en tiempo real. El ratón no es la interfaz. El hardware es
+              la interfaz.
             </p>
-            <div class="tech-tags">
-              <span class="tech-tag">Arduino</span>
-              <span class="tech-tag">C#</span>
-              <span class="tech-tag">Comunicación Serial</span>
-              <span class="tech-tag">Sensores</span>
-            </div>
-            <div class="project-actions">
-              <a class="btn btn-ghost" href="https://github.com/tu-usuario/proyecto-beta" target="_blank" rel="noopener">Ver código</a>
-              <a class="btn btn-primary" href="#" target="_blank" rel="noopener">Ver detalle</a>
+            <p class="project-card__highlight">
+              El input físico de cada botón se mapea a la lógica del juego
+              via comunicación serial, con detección de posición en tiempo real.
+            </p>
+            <div class="tags">
+              <span class="tag">Unity · C#</span>
+              <span class="tag">Arduino</span>
+              <span class="tag">Hardware design</span>
+              <span class="tag">Serial communication</span>
             </div>
           </div>
         </article>
 
-        <!-- ============ PROYECTO 3 ============ -->
-        <article class="project-card reveal">
-          <div class="media-frame">
-            <!-- REEMPLAZA con tu video/GIF — ver instrucciones en el Proyecto Alpha -->
-            <p class="media-placeholder-label">// espacio para video / GIF de demostración<br>Reemplazar por &lt;video&gt; o &lt;iframe&gt;</p>
+        <!-- TANK BATTLE -->
+        <article class="project-card">
+          <!-- =============================================
+               TANK BATTLE — IMAGEN DE PORTADA
+               Reemplaza el bloque interno de .project-card__media por:
+               <img src="assets/img/tanques-cover.jpg"
+                    alt="Tank Battle — Proyecto de Grado" />
+               Tamaño recomendado: 800×450px
+               Mejor opción: captura del nivel con varios tanques en pantalla.
+          ============================================= -->
+          <div class="project-card__media">
+            <span class="project-card__media-placeholder">🪖</span>
+            <span style="font-size:10px; text-align:center; padding:0 16px;">
+              IMAGEN: Captura del juego — tanques en el nivel<br>
+              Ver comentario en el código
+            </span>
           </div>
-          <div class="project-body">
-            <h3 class="project-title">Proyecto Gamma — Prototipo de Plataformas 2D</h3>
-            <p class="project-desc">
-              <!-- Reemplaza con la descripción técnica real del proyecto -->
-              Prototipo de plataformas 2D con controles ajustables (coyote time, buffer de salto), sistema de
-              niveles modular y assets propios modelados y texturizados en Blender.
+
+          <div class="project-card__body">
+            <p class="project-card__eyebrow">Proyecto de grado · Individual · Completo</p>
+            <h3 class="project-card__title">Tank Battle</h3>
+            <p class="project-card__desc">
+              Vista ortográfica top-down. Un nivel jugable, cinco tipos de tanques
+              con comportamiento diferenciado, sistema de destrucción por fuego
+              en cadena (barriles, árboles, tanques), puntuación y audio integrado.
             </p>
-            <div class="tech-tags">
-              <span class="tech-tag">Unity 2D</span>
-              <span class="tech-tag">C#</span>
-              <span class="tech-tag">Física 2D</span>
-              <span class="tech-tag">Blender</span>
-            </div>
-            <div class="project-actions">
-              <a class="btn btn-ghost" href="https://github.com/tu-usuario/proyecto-gamma" target="_blank" rel="noopener">Ver código</a>
-              <a class="btn btn-primary" href="#" target="_blank" rel="noopener">Probar demo</a>
+            <div class="tags">
+              <span class="tag">Unity · C#</span>
+              <span class="tag">Top-down</span>
+              <span class="tag">Sistema de destrucción</span>
+              <span class="tag">Audio</span>
             </div>
           </div>
         </article>
@@ -896,60 +1645,109 @@
     </div>
   </section>
 
-  <!-- =============================================
-       HABILIDADES TÉCNICAS
-       ============================================= -->
-  <section id="skills" style="background: var(--bg-alt);">
+
+  <!-- ============================================
+       STACK TÉCNICO
+  ============================================ -->
+  <section class="section" style="background:var(--surface); border-top:1px solid var(--border); border-bottom:1px solid var(--border);" id="stack">
     <div class="container">
-      <p class="eyebrow">stack_tecnico</p>
-      <h2 class="section-title">Habilidades <span>técnicas</span></h2>
 
-      <div class="skills-grid">
+      <span class="eyebrow">Stack</span>
+      <h2 class="section-title">Tecnologías</h2>
+      <p class="section-subtitle">
+        Cada tecnología aparece en el contexto donde fue usada.
+        No es una lista de logos — es evidencia de uso real.
+      </p>
 
-        <div class="skill-card reveal">
-          <div class="skill-card-header">
-            <span class="skill-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m5 3 14 9-14 9V3z"/></svg>
-            </span>
-            <h3 class="skill-card-title">Desarrollo de Videojuegos</h3>
-          </div>
-          <ul class="skill-list">
-            <li>Unity (2D / 3D)</li>
-            <li>C#</li>
-            <li>Arquitectura de código</li>
-            <li>Mecánicas de juego</li>
-            <li>UI / Canvas</li>
-            <li>Físicas</li>
+      <div class="stack-groups">
+
+        <div class="stack-group">
+          <p class="stack-group__title">// Game Development</p>
+          <ul class="stack-items" role="list">
+            <li class="stack-item">
+              <span class="stack-item__name">Unity 3D</span>
+              <span class="stack-item__context">Física, NavMesh, Shader Graph, AR Foundation, Android pipeline, sistemas en tiempo real</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">C#</span>
+              <span class="stack-item__context">30+ scripts originales: protocolos de comunicación, gestión de memoria móvil, integración hardware-software</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">AR Foundation · ARCore</span>
+              <span class="stack-item__context">Detección de superficies, placement de modelos 3D, interfaz holográfica en World Space</span>
+            </li>
           </ul>
         </div>
 
-        <div class="skill-card reveal">
-          <div class="skill-card-header">
-            <span class="skill-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01"/></svg>
-            </span>
-            <h3 class="skill-card-title">Integración &amp; Hardware</h3>
-          </div>
-          <ul class="skill-list">
-            <li>Integración de sensores / Arduino con Unity</li>
-            <li>Comunicación serial</li>
-            <li>Robótica</li>
+        <div class="stack-group">
+          <p class="stack-group__title">// Hardware & Electronics</p>
+          <ul class="stack-items" role="list">
+            <li class="stack-item">
+              <span class="stack-item__name">Arduino UNO · ESP32</span>
+              <span class="stack-item__context">Control de sensores, servomotores, comunicación serial y WiFi UDP</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">Sensores Velostat · Servos SG90</span>
+              <span class="stack-item__context">Fabricación de guante sensorial, ensamblaje de mano robótica con tendones de nylon</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">PCB · Soldadura</span>
+              <span class="stack-item__context">Circuito compacto soldado a mano para el guante wearable</span>
+            </li>
           </ul>
         </div>
 
-        <div class="skill-card reveal">
-          <div class="skill-card-header">
-            <span class="skill-icon">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-            </span>
-            <h3 class="skill-card-title">Arte 3D &amp; Herramientas</h3>
-          </div>
-          <ul class="skill-list">
-            <li>Blender</li>
-            <li>Modelado 3D</li>
-            <li>Git</li>
-            <li>GitHub</li>
-            <li>Control de versiones</li>
+        <div class="stack-group">
+          <p class="stack-group__title">// 3D & Fabricación</p>
+          <ul class="stack-items" role="list">
+            <li class="stack-item">
+              <span class="stack-item__name">Blender</span>
+              <span class="stack-item__context">Modelado orgánico, rigging, weight painting, pipeline de importación a Unity</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">TinkerCAD</span>
+              <span class="stack-item__context">Diseño de piezas mecánicas: falanges, carcasas, base de exhibición</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">Impresión 3D (PLA)</span>
+              <span class="stack-item__context">Prótesis robótica, carcasa de muñeca wearable, soporte de exhibición</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group__title">// Mobile & Backend</p>
+          <ul class="stack-items" role="list">
+            <li class="stack-item">
+              <span class="stack-item__name">Android SDK · NDK</span>
+              <span class="stack-item__context">Build pipeline, APK, optimización ETC2, gestión de memoria en C#</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">Google Firebase</span>
+              <span class="stack-item__context">Autenticación, Firestore, exportación de datos — proyecto HACEB</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">WiFi UDP · Serial protocol</span>
+              <span class="stack-item__context">Comunicación inalámbrica ESP32→Unity con protocolo custom diseñado para baja latencia</span>
+            </li>
+          </ul>
+        </div>
+
+        <div class="stack-group">
+          <p class="stack-group__title">// Educación & Diseño</p>
+          <ul class="stack-items" role="list">
+            <li class="stack-item">
+              <span class="stack-item__name">Diseño curricular STEAM</span>
+              <span class="stack-item__context">120 guías de tutor con código, teoría biomédica y actividades — curso propio</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">VEX Robotics</span>
+              <span class="stack-item__context">Coach y formador de equipos — Excellence Award VEX IQ 2024</span>
+            </li>
+            <li class="stack-item">
+              <span class="stack-item__name">Gamificación</span>
+              <span class="stack-item__context">Juego serio corporativo (HACEB) y sistemas de biofeedback en juego educativo</span>
+            </li>
           </ul>
         </div>
 
@@ -957,128 +1755,262 @@
     </div>
   </section>
 
-  <!-- =============================================
-       CONTACTO
-       ============================================= -->
-  <section id="contacto">
-    <div class="container contact-inner">
 
-      <div class="contact-text reveal">
-        <p class="eyebrow">contacto</p>
-        <h2 class="section-title">Hablemos de tu <span>proyecto</span></h2>
-        <p>
-          Si buscas un desarrollador Unity para tu próximo juego o sistema interactivo, escríbeme
-          directamente o usa el formulario. Respondo lo antes posible.
-        </p>
+  <!-- ============================================
+       ABOUT
+  ============================================ -->
+  <section class="section" id="sobre-mi">
+    <div class="container">
 
-        <div class="contact-direct">
-          <a class="contact-direct-item" href="mailto:miguelangellob@gmail.com">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
-            miguelangel10b@gmail.com
-          </a>
-          <a class="contact-direct-item" href="https://wa.me/573105465868" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
-            +57 310 546 5868
-          </a>
-          <!-- TODO: reemplaza con la URL real de tu perfil de LinkedIn -->
-          <a class="contact-direct-item" href="https://www.linkedin.com/in/tu-usuario" target="_blank" rel="noopener">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/><path d="M8 9h4v2a4 4 0 0 1 4-2c3 0 4 2 4 5v7h-4v-6c0-1.5-.5-3-2-3s-2 1.5-2 3v6H8z"/></svg>
-            linkedin.com/in/tu-usuario
-          </a>
+      <span class="eyebrow">About</span>
+
+      <div class="about__grid">
+
+        <div class="about__text">
+          <h2 class="section-title">Sobre mí</h2>
+
+          <p>
+            Soy técnico en desarrollo de videojuegos con cinco años formando
+            estudiantes en <strong>robótica, programación y diseño de sistemas interactivos</strong>
+            en Medellín, Colombia.
+          </p>
+
+          <p>
+            Empecé en el aula. Coordiné equipos de hasta diez profesores.
+            En febrero de 2024, uno de los equipos que entrené ganó el
+            <strong>VEX IQ Excellence Award en Middle School</strong> —
+            el reconocimiento más alto que otorga el torneo en esa categoría.
+          </p>
+
+          <p>
+            Hoy trabajo de forma independiente diseñando y ejecutando el
+            curso más complejo que he construido: un sistema de doce meses
+            donde una estudiante fabrica un guante, ensambla una mano
+            robótica, desarrolla un videojuego y conecta todo en una
+            aplicación de realidad aumentada — sin que ninguna de esas
+            piezas sea opcional.
+          </p>
+
+          <p>
+            Lo que me diferencia no es dominar Unity o dominar Arduino.
+            Es saber <strong>diseñar el sistema donde los dos son inseparables.</strong>
+          </p>
+
+          <div class="about__credential">
+            <p class="about__credential-label">// Reconocimiento</p>
+            <p class="about__credential-text">VEX IQ Excellence Award · Middle School</p>
+            <p class="about__credential-sub">Febrero 2024 — Como coach y formador del equipo</p>
+          </div>
         </div>
+
+        <div>
+          <!-- =============================================
+               FOTO DE PERFIL
+               Reemplaza el bloque .about__photo por:
+               <img src="assets/img/miguel-porras.jpg"
+                    alt="Miguel Porras"
+                    style="border-radius:16px; width:100%; max-width:420px;" />
+               Tamaño recomendado: 840×1050px (4:5)
+               La foto que mencionaste que tienes y te gusta
+               va aquí directamente.
+          ============================================= -->
+          <div class="about__photo">
+            <span style="font-size:32px; opacity:0.3;">📷</span>
+            <span style="font-size:11px; font-family:var(--mono);">
+              FOTO: Miguel Porras<br>
+              Ver comentario en el código
+            </span>
+          </div>
+        </div>
+
       </div>
-
-      <!--
-        FORMULARIO DE CONTACTO
-        GitHub Pages es hosting estático (sin backend), así que este formulario
-        arma automáticamente un correo (mailto:) con lo que la persona escriba.
-        Si más adelante quieres que los mensajes lleguen sin abrir el cliente de
-        correo del visitante, puedes conectar este mismo <form> a un servicio
-        gratuito como Formspree (https://formspree.io) cambiando el "action".
-      -->
-      <form class="contact-form reveal" id="contactForm">
-        <div class="form-field">
-          <label for="name">Nombre</label>
-          <input type="text" id="name" name="name" required>
-        </div>
-        <div class="form-field">
-          <label for="email">Correo</label>
-          <input type="email" id="email" name="email" required>
-        </div>
-        <div class="form-field">
-          <label for="message">Mensaje</label>
-          <textarea id="message" name="message" required></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
-        <p class="form-note">Al enviar, se abrirá tu cliente de correo con el mensaje ya redactado hacia miguelangellob@gmail.com.</p>
-      </form>
-
     </div>
   </section>
 
-  <!-- =============================================
-       PIE DE PÁGINA
-       ============================================= -->
-  <footer>
-    <div class="container footer-inner">
-      <p class="footer-copy">© 2026 Miguel A. Porras - Unity Developer</p>
-      <div class="footer-social">
-        <!-- TODO: reemplaza con tus URLs reales -->
-        <a href="https://github.com/tu-usuario" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49 0-.24-.01-1.02-.01-1.85-2.78.62-3.37-1.22-3.37-1.22-.46-1.2-1.11-1.52-1.11-1.52-.9-.64.07-.63.07-.63 1 .07 1.53 1.06 1.53 1.06.89 1.57 2.34 1.11 2.91.85.09-.67.35-1.11.63-1.37-2.22-.26-4.56-1.14-4.56-5.06 0-1.12.39-2.03 1.03-2.75-.1-.26-.45-1.31.1-2.72 0 0 .84-.28 2.75 1.05a9.3 9.3 0 0 1 5 0c1.9-1.33 2.75-1.05 2.75-1.05.55 1.41.2 2.46.1 2.72.64.72 1.03 1.63 1.03 2.75 0 3.93-2.34 4.79-4.57 5.05.36.32.68.94.68 1.9 0 1.37-.01 2.47-.01 2.81 0 .27.18.6.69.49A10.26 10.26 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/in/tu-usuario" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/><path d="M8 9h4v2a4 4 0 0 1 4-2c3 0 4 2 4 5v7h-4v-6c0-1.5-.5-3-2-3s-2 1.5-2 3v6H8z"/></svg>
-        </a>
-        <a href="mailto:miguelangellob@gmail.com" aria-label="Correo">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
-        </a>
+
+  <!-- ============================================
+       CONTACT
+  ============================================ -->
+  <section class="section contact" id="contacto">
+    <div class="container">
+
+      <div class="contact__inner">
+
+        <div class="contact__info">
+          <span class="eyebrow">Contact</span>
+          <h2 class="section-title">Hablemos</h2>
+
+          <p>
+            ¿Tienes un proyecto que necesita vivir en hardware y en pantalla
+            al mismo tiempo? ¿Buscas un tutor que enseñe tecnología como un
+            sistema, no como una lista de temas?
+          </p>
+
+          <p>Disponible para trabajo remoto.</p>
+
+          <ul class="contact__bullets">
+            <li class="contact__bullet">Clases de Unity · Arduino · Robótica</li>
+            <li class="contact__bullet">Diseño de cursos STEAM a medida</li>
+            <li class="contact__bullet">Integración hardware-software</li>
+            <li class="contact__bullet">Desarrollo de videojuegos</li>
+          </ul>
+        </div>
+
+        <!-- =============================================
+             FORMULARIO DE CONTACTO — FORMSPREE
+             Pasos para activarlo:
+             1. Ve a https://formspree.io y crea una cuenta gratuita
+             2. Crea un nuevo formulario — Formspree te dará una URL así:
+                https://formspree.io/f/xxxxxxxz
+             3. Reemplaza "https://formspree.io/f/REEMPLAZA_AQUI" en la
+                línea action="" del <form> de abajo por tu URL real.
+             4. Eso es todo. Los mensajes llegarán a tu Gmail.
+             Plan gratuito: 50 envíos/mes.
+        ============================================= -->
+        <form
+          class="form"
+          id="contactForm"
+          action="https://formspree.io/f/REEMPLAZA_AQUI"
+          method="POST"
+        >
+          <div class="form__group">
+            <label class="form__label" for="name">Nombre</label>
+            <input
+              class="form__input"
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Tu nombre"
+              required
+            />
+          </div>
+
+          <div class="form__group">
+            <label class="form__label" for="email">Correo electrónico</label>
+            <input
+              class="form__input"
+              type="email"
+              id="email"
+              name="email"
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
+
+          <div class="form__group">
+            <label class="form__label" for="message">Mensaje</label>
+            <textarea
+              class="form__textarea"
+              id="message"
+              name="message"
+              placeholder="Cuéntame sobre tu proyecto o lo que necesitas..."
+              required
+            ></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary form__submit">
+            Enviar mensaje
+          </button>
+
+          <div class="form__success" id="formSuccess">
+            ✓ Mensaje enviado. Te respondo pronto.
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </section>
+  </main>
+
+
+  <!-- ============================================
+       FOOTER
+  ============================================ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__inner">
+        <p class="footer__copy">© 2025 Miguel Porras · Medellín, Colombia</p>
+        <a href="#inicio" class="footer__back">↑ Volver al inicio</a>
       </div>
     </div>
   </footer>
 
+
+  <!-- ============================================
+       JAVASCRIPT
+  ============================================ -->
   <script>
-    // Menú móvil
-    const navToggle = document.getElementById('navToggle');
-    const navLinks = document.getElementById('navLinks');
-    navToggle.addEventListener('click', () => {
-      const isOpen = navLinks.classList.toggle('is-open');
-      navToggle.setAttribute('aria-expanded', String(isOpen));
+    // Mobile nav toggle
+    const menuBtn    = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    const mobileLinks = document.querySelectorAll('.mobile-link');
+
+    menuBtn.addEventListener('click', () => {
+      mobileMenu.classList.toggle('open');
     });
-    navLinks.querySelectorAll('a').forEach(link => {
+
+    mobileLinks.forEach(link => {
       link.addEventListener('click', () => {
-        navLinks.classList.remove('is-open');
-        navToggle.setAttribute('aria-expanded', 'false');
+        mobileMenu.classList.remove('open');
       });
     });
 
-    // Revelado de elementos al hacer scroll
-    const revealEls = document.querySelectorAll('.reveal');
-    if ('IntersectionObserver' in window){
+    // Close mobile menu on outside click
+    document.addEventListener('click', (e) => {
+      if (!menuBtn.contains(e.target) && !mobileMenu.contains(e.target)) {
+        mobileMenu.classList.remove('open');
+      }
+    });
+
+    // Formspree AJAX submission (mejor UX que redirección)
+    const form        = document.getElementById('contactForm');
+    const successMsg  = document.getElementById('formSuccess');
+
+    if (form) {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data   = new FormData(form);
+        const action = form.getAttribute('action');
+
+        try {
+          const res = await fetch(action, {
+            method:  'POST',
+            body:    data,
+            headers: { 'Accept': 'application/json' }
+          });
+
+          if (res.ok) {
+            form.reset();
+            successMsg.style.display = 'block';
+            setTimeout(() => { successMsg.style.display = 'none'; }, 6000);
+          } else {
+            alert('Hubo un error. Por favor escríbeme directamente.');
+          }
+        } catch {
+          alert('Hubo un error de red. Verifica tu conexión.');
+        }
+      });
+    }
+
+    // Smooth reveal on scroll (opcional, no bloquea lectura)
+    if ('IntersectionObserver' in window) {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting){
-            entry.target.classList.add('is-visible');
+          if (entry.isIntersecting) {
+            entry.target.style.opacity  = '1';
+            entry.target.style.transform = 'translateY(0)';
             observer.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.15 });
-      revealEls.forEach(el => observer.observe(el));
-    } else {
-      revealEls.forEach(el => el.classList.add('is-visible'));
-    }
+      }, { threshold: 0.1 });
 
-    // Formulario de contacto -> abre el cliente de correo con los datos ya redactados
-    const contactForm = document.getElementById('contactForm');
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = document.getElementById('name').value;
-      const email = document.getElementById('email').value;
-      const message = document.getElementById('message').value;
-      const subject = encodeURIComponent(`Contacto desde portafolio — ${name}`);
-      const body = encodeURIComponent(`Nombre: ${name}\nCorreo: ${email}\n\n${message}`);
-      window.location.href = `mailto:miguelangellob@gmail.com?subject=${subject}&body=${body}`;
-    });
+      document.querySelectorAll('.project-card, .decision, .timeline__item, .stack-group').forEach(el => {
+        el.style.opacity   = '0';
+        el.style.transform = 'translateY(20px)';
+        el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        observer.observe(el);
+      });
+    }
   </script>
 
 </body>
