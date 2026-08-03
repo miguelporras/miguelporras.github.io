@@ -1117,6 +1117,57 @@
     }
 
     /* ============================================
+       PROYECTO DESTACADO — TARJETA CON 2 IMÁGENES
+    ============================================ */
+    .project-card--featured {
+      border-color: var(--cyan);
+      grid-column: span 1; /* ocupa 1 columna como las demás */
+    }
+
+    .project-card__media--dual {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+
+    .project-card__media--dual .dual-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.4s ease;
+    }
+
+    .project-card__media--dual .dual-img:hover {
+      transform: scale(1.04);
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Etiqueta "AR" flotante en la segunda imagen */
+    .project-card__media--dual {
+      position: relative;
+    }
+
+    .project-card__media--dual::after {
+      content: 'AR';
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--bg);
+      background: var(--cyan);
+      border-radius: 4px;
+      padding: 3px 7px;
+      letter-spacing: 0.08em;
+      pointer-events: none;
+    }
+
+    /* ============================================
        RESPONSIVE
     ============================================ */
     @media (max-width: 768px) {
@@ -1513,7 +1564,7 @@
       <h2 class="section-title">Otros trabajos</h2>
       <p class="section-subtitle">
         Proyectos completos entregados — desde gamificación corporativa
-        hasta integración física de videojuegos.
+        hasta tours virtuales con realidad aumentada.
       </p>
 
       <div class="projects-grid">
@@ -1532,8 +1583,7 @@
                Ruta de Valores (es de tu autoría).
           ============================================= -->
           <div class="project-card__media">
-               <img src="Comunidad_Haceb.PNG"
-                    alt="Comunidad HACEB — Gamificación HR" />
+            <span class="project-card__media-placeholder">🏭</span>
             <span style="font-size:10px; text-align:center; padding:0 16px;">
               IMAGEN: Captura del juego Comunidad HACEB<br>
               Ver comentario en el código
@@ -1603,6 +1653,58 @@
               <span class="tag">Arduino</span>
               <span class="tag">Hardware design</span>
               <span class="tag">Serial communication</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- CONEXTOUR.80 -->
+        <article class="project-card project-card--featured">
+
+          <!-- =============================================
+               CONEXTOUR.80 — IMÁGENES DE PORTADA
+               Las dos capturas de pantalla del proyecto ya están
+               disponibles como San_Antonio.PNG y San_Antonio_2.PNG.
+               Colócalas en la misma carpeta que el index.html
+               (o en assets/img/ y ajusta las rutas de los src).
+               Imagen 1: vista del mapa 3D con todas las zonas
+               Imagen 2: vista interior de la Zona Urbana con modelos 3D
+          ============================================= -->
+          <div class="project-card__media project-card__media--dual">
+            <img
+              src="San_Antonio.PNG"
+              alt="Conextour.80 — Mapa 3D interactivo del corregimiento de San Antonio"
+              class="dual-img"
+            />
+            <img
+              src="San_Antonio_2.PNG"
+              alt="Conextour.80 — Modelo 3D de la Zona Urbana con sitios de interés"
+              class="dual-img"
+            />
+          </div>
+
+          <div class="project-card__body">
+            <p class="project-card__eyebrow">Tour virtual · Android · Proyecto completo</p>
+            <h3 class="project-card__title">Conextour<span style="color:var(--cyan);">.80</span></h3>
+            <p class="project-card__desc">
+              Aplicación Android de tour virtual para el corregimiento de San Antonio de Prado,
+              Medellín. El usuario navega un mapa 3D interactivo dividido por zonas — Zona Urbana,
+              La Verde, La Florida, Yarumalito y más — y desde cada zona explora los sitios de
+              interés con modelos 3D, fotos reales e información histórica y cultural del lugar.
+            </p>
+            <p class="project-card__highlight">
+              Incluye un módulo de <strong style="color:var(--cyan);">Realidad Aumentada</strong>:
+              al llegar físicamente al lugar, el visitante escanea una imagen marcador y la
+              miniatura 3D del sitio aparece flotando sobre su entorno real, junto con la
+              información más relevante del lugar.
+            </p>
+            <div class="tags">
+              <span class="tag">Unity · C#</span>
+              <span class="tag">AR Foundation</span>
+              <span class="tag">Mapa 3D interactivo</span>
+              <span class="tag">Android</span>
+              <span class="tag">Tour virtual</span>
+              <span class="tag">Modelos 3D</span>
+              <span class="tag">Patrimonio cultural</span>
             </div>
           </div>
         </article>
